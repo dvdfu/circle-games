@@ -1,10 +1,6 @@
 package com.dvdfu.eater.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Circle;
-import com.dvdfu.eater.handlers.GameObject;
 import com.dvdfu.eater.handlers.Input;
 
 public class Player extends CircleObject {
@@ -15,6 +11,7 @@ public class Player extends CircleObject {
 	public void update() {
 		super.update();
 		handleKeys();
+		//setRadius(getRadius() + 1);
 	}
 
 	private void handleKeys() {

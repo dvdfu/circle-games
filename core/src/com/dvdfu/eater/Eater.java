@@ -32,7 +32,7 @@ public class Eater extends ApplicationAdapter {
 		}
 		sr = new ShapeRenderer();
 		view = new CameraController(Vars.SCREEN_WIDTH, Vars.SCREEN_HEIGHT);
-		view.setPan(20);
+		// view.setPan(20);
 		cam = new OrthographicCamera();
 	}
 
@@ -63,11 +63,17 @@ public class Eater extends ApplicationAdapter {
 				co.update();
 				co.render(sr);
 			} else {
-				food.add(new CircleObject(MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), (p.getRadius() + co.getRadius()) * 2));
+				food.add(new CircleObject(MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), p.getRadius() * 4));
 				food.removeValue(co, false);
 			}
 		}
 		sr.end();
 		Input.update();
+		if (p.getRadius() > 320) {
+			p.shrink();
+			for (CircleObject co : food) {
+				co.shrink();
+			}
+		}
 	}
 }

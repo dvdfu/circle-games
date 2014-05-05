@@ -1,11 +1,8 @@
 package com.dvdfu.eater.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.dvdfu.eater.handlers.GameObject;
-import com.dvdfu.eater.handlers.Input;
 
 public class CircleObject extends GameObject {
 	protected float radius;
@@ -54,5 +51,11 @@ public class CircleObject extends GameObject {
 	
 	public boolean isDead() {
 		return dead;
+	}
+	
+	public void shrink() {
+		radius /= 10;
+		x /= 10;
+		y /= 10;
 	}
 }
