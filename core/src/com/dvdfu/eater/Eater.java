@@ -35,6 +35,11 @@ public class Eater extends ApplicationAdapter {
 		// view.setPan(20);
 		cam = new OrthographicCamera();
 	}
+	
+	private void resetPlayer() {
+		p.setPosition(0, 0);
+		p.setRadius(32);
+	}
 
 	public void render() {
 		Gdx.graphics.setTitle("" + Gdx.graphics.getFramesPerSecond());
@@ -43,6 +48,8 @@ public class Eater extends ApplicationAdapter {
 		view.follow(p.getX(), p.getY());
 		view.setZoom(p.getRadius() / 16);
 		view.update();
+		view.setPanRate(20);
+		view.setZoomRate(20);
 		cam = view.getCam();
 		sr.setProjectionMatrix(cam.combined);
 		p.update();
@@ -56,6 +63,7 @@ public class Eater extends ApplicationAdapter {
 					if (co.getCircle().overlaps(p.getCircle())) {
 						p.setArea(p.getArea() + co.getArea());
 						co.kill();
+						p.stop();
 					}
 				} else {
 					sr.setColor(Color.RED);
@@ -68,8 +76,11 @@ public class Eater extends ApplicationAdapter {
 			}
 		}
 		sr.end();
+		
 		Input.update();
 		if (p.getRadius() > 320) {
+			view.panInstant(view.getPosition().x / 10, view.getPosition().y / 10);
+			view.zoomInstant(view.getZoom() / 10);
 			p.shrink();
 			for (CircleObject co : food) {
 				co.shrink();
