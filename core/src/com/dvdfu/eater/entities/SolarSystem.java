@@ -7,18 +7,27 @@ import com.badlogic.gdx.utils.Array;
 
 public class SolarSystem {
 	private Array<Planet> planets;
+	private Planet sun;
+	private float size;
 	
 	public SolarSystem() {
+		sun = new Planet(0, 0, 512);
 		planets = new Array<Planet>();
-		for (int i = 0; i < 2; i++) {
-			float randx = MathUtils.random(-200, 200);
-			float randy = MathUtils.random(-200, 200);
-			float randr = MathUtils.random(16, 64);
-			planets.add(new Planet(randx, randy, randr));
+		planets.add(sun);
+		for (int i = 0; i < 10; i++) {
+			float randDist = MathUtils.random(1000, 3000);
+			float randAngle = MathUtils.random(2 * MathUtils.PI);
+			float randr = MathUtils.random(32, 128);
+			Planet p = new Planet(randDist * MathUtils.cos(randAngle), randDist * MathUtils.sin(randAngle), randr);
+			Vector2 velocity = new Vector2(randDist * MathUtils.cos(randAngle + MathUtils.PI / 2), randDist * MathUtils.sin(randAngle + MathUtils.PI / 2)).scl(1f / 100);
+			p.setVelocity(velocity);
+			planets.add(p);
 		}
+		size = 0;
 	}
 	
 	public void update() {
+		size = 0;
 		Vector2[] forces = new Vector2[planets.size];
 		for (int i = 0; i < forces.length; i++) {
 			forces[i] = new Vector2(0, 0);
@@ -41,9 +50,14 @@ public class SolarSystem {
 	
 	private Vector2 forceOn1By2(Planet p1, Planet p2) {
 		Vector2 direction = p2.getLocation().sub(p1.getLocation());
-		System.out.println(direction.len());
 		float length = direction.len();
-		float magnitude = p1.getMass() * p2.getMass() / length / length;
+		float magnitude = 0;
+		if (length != 0) {
+			magnitude = p1.getMass() * p2.getMass() / length / length;
+			if (Math.abs(length) > size) {
+				size = Math.abs(length);
+			}
+		}
 		return direction.nor().scl(magnitude);
 	}
 	
@@ -51,5 +65,13 @@ public class SolarSystem {
 		for (Planet p : planets) {
 			p.render(sr);
 		}
+	}
+	
+	public Planet getSun() {
+		return sun;
+	}
+	
+	public float getSize() {
+		return size;
 	}
 }

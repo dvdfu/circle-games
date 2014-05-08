@@ -12,14 +12,18 @@ public class Planet extends CircleObject {
 
 	public Planet(float x, float y, float radius) {
 		super(x, y, radius);
-		velocity = new Vector2(0, 0);
-		acceleration = new Vector2(0, 0);
 		density = 1;
 		mass = density * radius * radius;
+		acceleration = new Vector2(0, 0);
+		velocity = new Vector2(0, 0);
 	}
 	
 	public void setForce(Vector2 force) {
 		acceleration.set(force).scl(1 / mass);
+	}
+	
+	public void setVelocity(Vector2 velocity) {
+		this.velocity = velocity;
 	}
 	
 	public void setDensity(float density) {

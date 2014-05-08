@@ -26,7 +26,7 @@ public class Space extends ApplicationAdapter {
 	public void create() {
 		Gdx.input.setInputProcessor(new InputProcessor());
 		sr = new ShapeRenderer();
-		view = new CameraController(Vars.SCREEN_WIDTH, Vars.SCREEN_HEIGHT);
+		view = new CameraController(Vars.SCREEN_WIDTH * 3, Vars.SCREEN_HEIGHT * 3);
 		cam = new OrthographicCamera();
 		ss = new SolarSystem();
 	}
@@ -35,14 +35,15 @@ public class Space extends ApplicationAdapter {
 		Gdx.graphics.setTitle("" + Gdx.graphics.getFramesPerSecond());
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		ss.update();
 		view.update();
-		view.follow(0, 0);
+		view.follow(ss.getSun().getX(), ss.getSun().getY());
+		view.setZoom(ss.getSize() / 4000);
 		cam = view.getCam();
 		sr.setProjectionMatrix(cam.combined);
 		sr.begin(ShapeType.Line);
 		sr.setColor(Color.WHITE);
 		sr.end();
-		ss.update();
 		ss.render(sr);
 		Input.update();
 	}

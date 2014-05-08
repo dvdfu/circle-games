@@ -97,6 +97,9 @@ public class CameraController {
 				cam.zoom = zoom;
 			}
 		}
+		else {
+			cam.zoom = zoom;
+		}
 		cam.update();
 	}
 }
