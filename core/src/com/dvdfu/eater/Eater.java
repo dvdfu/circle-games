@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.dvdfu.eater.entities.CircleObject;
+import com.dvdfu.eater.entities.Food;
 import com.dvdfu.eater.entities.Player;
 import com.dvdfu.eater.handlers.CameraController;
 import com.dvdfu.eater.handlers.Input;
@@ -18,7 +18,7 @@ import com.dvdfu.eater.handlers.Vars;
 
 public class Eater extends ApplicationAdapter {
 	private Player p;
-	private Array<CircleObject> food;
+	private Array<Food> food;
 	private ShapeRenderer sr;
 	private CameraController view;
 	private OrthographicCamera cam;
@@ -26,19 +26,14 @@ public class Eater extends ApplicationAdapter {
 	public void create() {
 		Gdx.input.setInputProcessor(new InputProcessor());
 		p = new Player();
-		food = new Array<CircleObject>();
+		food = new Array<Food>();
 		for (int i = 0; i < 100; i++) {
-			food.add(new CircleObject(MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), MathUtils.random(4, 256)));
+			food.add(new Food(MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), MathUtils.random(16, 256)));
 		}
 		sr = new ShapeRenderer();
 		view = new CameraController(Vars.SCREEN_WIDTH, Vars.SCREEN_HEIGHT);
 		// view.setPan(20);
 		cam = new OrthographicCamera();
-	}
-	
-	private void resetPlayer() {
-		p.setPosition(0, 0);
-		p.setRadius(32);
 	}
 
 	public void render() {
@@ -56,22 +51,31 @@ public class Eater extends ApplicationAdapter {
 		sr.begin(ShapeType.Line);
 		sr.setColor(Color.WHITE);
 		p.render(sr);
-		for (CircleObject co : food) {
+		for (Food co : food) {
 			if (!co.isDead()) {
 				if (co.getRadius() < p.getRadius()) {
 					sr.setColor(Color.GREEN);
 					if (co.getCircle().overlaps(p.getCircle())) {
 						p.setArea(p.getArea() + co.getArea());
 						co.kill();
-						p.stop();
 					}
 				} else {
-					sr.setColor(Color.RED);
+					sr.setColor(new Color(1 - (p.getArea() / co.getArea()), p.getArea() / co.getArea(), 0, 1));
 				}
 				co.update();
 				co.render(sr);
 			} else {
-				food.add(new CircleObject(MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100), p.getRadius() * 4));
+				float newx = MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100);
+				float newy = MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100);
+				float newr = co.getRadius() * 10;
+				while (newx - newr > cam.position.x - cam.viewportWidth / 2 &&
+						newx + newr < cam.position.x + cam.viewportWidth / 2 &&
+						newy - newr > cam.position.y - cam.viewportHeight / 2 &&
+						newy + newr < cam.position.y + cam.viewportHeight / 2) {
+					newx = MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100);
+					newy = MathUtils.random(-p.getRadius() * 100, p.getRadius() * 100);
+				}
+				food.add(new Food(newx, newy, newr));
 				food.removeValue(co, false);
 			}
 		}
@@ -82,7 +86,7 @@ public class Eater extends ApplicationAdapter {
 			view.panInstant(view.getPosition().x / 10, view.getPosition().y / 10);
 			view.zoomInstant(view.getZoom() / 10);
 			p.shrink();
-			for (CircleObject co : food) {
+			for (Food co : food) {
 				co.shrink();
 			}
 		}

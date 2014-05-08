@@ -1,9 +1,10 @@
 package com.dvdfu.eater.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dvdfu.eater.handlers.Input;
 
-public class Player extends CircleObject {
+public class Player extends Food {
 	private float vy;
 	private float vx;
 	public Player() {
@@ -14,10 +15,12 @@ public class Player extends CircleObject {
 
 	public void update() {
 		super.update();
-		handleKeys();
+		//handleKeys();
+		vx = Gdx.input.getAccelerometerY() * radius / 10;
+		vy = -Gdx.input.getAccelerometerX() * radius / 10;
 		x += vx;
 		y += vy;
-		if (Math.abs(vx) > 0.5) {
+		/*if (Math.abs(vx) > 0.5) {
 			vx *= 0.95;
 		} else {
 			vx = 0;
@@ -26,7 +29,8 @@ public class Player extends CircleObject {
 			vy *= 0.95;
 		} else {
 			vy = 0;
-		}
+		}*/
+		
 		//setRadius(getRadius() + 1);
 	}
 
@@ -45,11 +49,6 @@ public class Player extends CircleObject {
 		}
 	}
 	
-	public void stop() {
-		vy = 0;
-		vx = 0;
-	}
-
 	public void render(ShapeRenderer sr) {
 		sr.circle(x, y, radius);
 	}

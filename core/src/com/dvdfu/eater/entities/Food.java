@@ -4,12 +4,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.dvdfu.eater.handlers.GameObject;
 
-public class CircleObject extends GameObject {
+public class Food extends GameObject {
 	protected float radius;
 	protected Circle body;
 	protected boolean dead;
 
-	public CircleObject(float x, float y, float radius) {
+	public Food(float x, float y, float radius) {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
