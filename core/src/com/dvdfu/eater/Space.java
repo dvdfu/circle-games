@@ -35,16 +35,16 @@ public class Space extends ApplicationAdapter {
 		Gdx.graphics.setTitle("" + Gdx.graphics.getFramesPerSecond());
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		ss.update();
-		view.update();
 		view.follow(ss.getSun().getX(), ss.getSun().getY());
-		view.setZoom(ss.getSize() / 4000);
+		view.setZoom(10);
+		view.update();
 		cam = view.getCam();
 		sr.setProjectionMatrix(cam.combined);
-		sr.begin(ShapeType.Line);
-		sr.setColor(Color.WHITE);
-		sr.end();
+		ss.update();
 		ss.render(sr);
+		if (Input.MousePressed()) {
+			ss.addPlanet(cam.position.x + Input.mouse.x * view.getZoom(), cam.position.y - Input.mouse.y * view.getZoom(), 128);
+		}
 		Input.update();
 	}
 }
